@@ -59,7 +59,7 @@ jekyll serve
 3. 记录下你填写的多说的域名 **http://xxx.duoshuo.com**
 4. 把xxx填入到 **_config.yml** 中的duoshuo_username中。
 
-> 注意中的duoshuo_username中并不是你在多说的用户名，而是你在多说的域名。
+> 注意_config.yml中的duoshuo_username中并不是你在多说的用户名，而是你在多说的域名。
 
 # Thanks
 
