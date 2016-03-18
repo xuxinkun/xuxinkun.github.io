@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "nginx_upstream_check_module模块源码分析"
+title:      "nginx健康检查模块源码分析"
 subtitle:   "nginx_upstream_check_module Analysis"
 date:       2016-03-17 8:00:00
 author:     "XuXinkun"
@@ -9,9 +9,9 @@ tags:
     - nginx
 ---
 
-# nginx_upstream_check_module模块
+# nginx健康检查模块
 
-[nginx_upstream_check_module模块](https://github.com/yaoweibin/nginx_upstream_check_module)是nginx中用于健康检查的模块。
+本文所说的nginx健康检查模块是指nginx_upstream_check_module模块。[nginx_upstream_check_module模块](https://github.com/yaoweibin/nginx_upstream_check_module)是Taobao定制的用于健康检查的模块。
 
 其主要作用是根据配置，对upstream中的每个server进行定期健康检查，在其超时或连续多次失败后，将其置为down状态。
 
@@ -28,7 +28,7 @@ tags:
     
 更多的用法可以参看[README](https://github.com/yaoweibin/nginx_upstream_check_module/blob/master/README)。
 
-# nginx_upstream_check_module源码分析
+# 模块源码分析
 
 分析的版本是[TAG:v0.3.0](https://github.com/yaoweibin/nginx_upstream_check_module/tree/v0.3.0)。
 
