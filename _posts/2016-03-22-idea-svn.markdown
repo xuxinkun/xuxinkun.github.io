@@ -46,7 +46,7 @@ IDEA的几个功能是我特别满意的:
 
 在IDEA的plugins中中首先安装Go插件。
 
-![Go-plugin](http://xuxinkun.github.io/img/idea/idea-go-plugin.png)
+![Go-plugin](http://xuxinkun.github.io/img/idea/idea-golang-plugin.png)
 
 然后在设置中设置Go SDK。
 
