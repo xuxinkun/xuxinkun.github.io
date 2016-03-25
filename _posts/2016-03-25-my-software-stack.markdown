@@ -31,6 +31,9 @@ N多的问题。
 
 - VirtualBox
 - pycharm
+    - go
+    - multi markdown
+    - docker
 - eclipse
 - jdk
 - gosdk
@@ -60,10 +63,15 @@ N多的问题。
 - teamviewer
 - mactype
 - chrome
+    - github-readme-toc
+    - GitHub Highlight Selected
+    - Octotree
 - everything
 - wiz
 - DAEMON Tools Lite
 - office
+- keepass 2
+- PDF-XChange Viewer
 
 ## Config
 
@@ -72,9 +80,10 @@ N多的问题。
 - pycharm: C:\Users\xuxinkun\.PyCharm50
 - chrome书签: C:\Users\XuXinkun\AppData\Local\Google\Chrome\User Data\Default\Bookmarks
 - xshell sessions: C:\Users\xuxinkun\AppData\Roaming\NetSarang\Xshell\Sessions
+- hosts
 
 安装后需要配置的环境变量
 
 - JAVA_HOME: D:\Program Files\Java\jdk1.7.0_71
 - CLASSPATH: %Java_Home%\bin;%Java_Home%\lib\dt.jar;%Java_Home%\lib\tools.jar
-- PATH: %Java_Home%\bin;%Java_Home%\jre\bin;D:\Python27\Scripts;C:\Go\bin;D:\Program Files\Git\bin;D:\Program Files\TortoiseSVN\bin;
+- PATH: %Java_Home%\bin;%Java_Home%\jre\bin;D:\Python27\Scripts;C:\Go\bin;D:\Program Files\Git\bin;D:\Program Files\TortoiseSVN\bin;D:\Ruby22-x64\bin;D:\Program Files\nodejs
