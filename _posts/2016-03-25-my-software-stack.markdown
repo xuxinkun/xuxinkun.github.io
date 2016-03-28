@@ -17,8 +17,8 @@ tags:
 
 N多的问题。
 
-- 仅仅第一天就就蓝屏了四次。甚至一次是无任何操作。而且很多的软件，比如photoshop cs6使用都有问题。
-- 字体也垃圾，高分辨率下字小到看的费力。估计是为了pad设计的，pc体验顿时将为负数。调大字体后，N多的
+- 仅仅第一天就就蓝屏了七次。甚至一次是无任何操作。而且很多的软件，比如photoshop cs6使用都有问题。
+- 字体也垃圾，高分辨率下字小到看的费力。估计是为了pad设计的，pc体验顿时降为负数。调大字体后，许多界面上字体和图标变得模糊不清。
 - 输入法在使用pycharm等软件时不能跟随光标，自动跑到了屏幕最右下角。
 
 痛定思痛，明天装回win7。哪怕把软件全部重新装一遍。还是用稳定版本的系统好。不做小白鼠。
@@ -80,7 +80,7 @@ N多的问题。
 - pycharm: C:\Users\xuxinkun\.PyCharm50
 - chrome书签: C:\Users\XuXinkun\AppData\Local\Google\Chrome\User Data\Default\Bookmarks
 - xshell sessions: C:\Users\xuxinkun\AppData\Roaming\NetSarang\Xshell\Sessions
-- hosts
+- hosts: C:\Windows\System32\drivers\etc\hosts
 
 安装后需要配置的环境变量
 
