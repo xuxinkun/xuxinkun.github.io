@@ -77,7 +77,7 @@ N多的问题。
 
 重装时需要预先保存下来的配置或者数据
 
-- pycharm: C:\Users\xuxinkun\.PyCharm50
+- pycharm: C:\Users\xuxinkun\\.PyCharm50
 - chrome书签: C:\Users\XuXinkun\AppData\Local\Google\Chrome\User Data\Default\Bookmarks
 - xshell sessions: C:\Users\xuxinkun\AppData\Roaming\NetSarang\Xshell\Sessions
 - hosts: C:\Windows\System32\drivers\etc\hosts
