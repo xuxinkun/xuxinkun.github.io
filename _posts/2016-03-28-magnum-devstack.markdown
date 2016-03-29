@@ -6,6 +6,7 @@ date:       2016-03-28 12:00:00
 author:     "XuXinkun"
 header-img: "img/post-bg-magnum-devstack.jpg"
 tags:
+    - openstack
     - magnum
     - devstack
 ---
