@@ -9,7 +9,7 @@ tags:
     - openstack
     - magnum
     - kubernetes
-----------------
+---
 
 # Kubernetes Master Stack
 
