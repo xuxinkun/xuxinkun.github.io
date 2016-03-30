@@ -31,14 +31,6 @@ wait handle主要用于在server全部执行完后，在heat进行回调，主�
 
 ## master server及其配置
 
-    ######################################################################
-    #
-    # software configs.  these are components that are combined into
-    # a multipart MIME user-data archive.
-    #
-    
-    ...
-    
     kube_master_init:             //包含了master初始化的各种脚本和配置等
       type: OS::Heat::MultipartMime
       properties:
@@ -63,11 +55,6 @@ wait handle主要用于在server全部执行完后，在heat进行回调，主�
           - config: {get_resource: kube_examples}
           - config: {get_resource: master_wc_notify}
     
-    ######################################################################
-    #
-    # a single kubernetes master.
-    #
-    
     kube_master:                  //待创建的master的KVM虚拟机
       type: OS::Nova::Server
       properties:
@@ -89,6 +76,7 @@ kube_master_init是一个完整的初始化master节点的脚本和文件。mast
 master server除了要为其分配内网网口外，还要为其设置floating IP以便从外网进行访问。
 
 同时，由于master server中启动了etcd和kube-apiserver，因此需要将对应的服务端口加入到对应负载均衡的后端。
+
     kube_master_eth0:                     //master的内网网口
       type: OS::Neutron::Port
       properties:
@@ -125,12 +113,6 @@ master server除了要为其分配内网网口外，还要为其设置floating I
 ## master server存储配置
     
 因为镜像本身的容量较小，根据配置，可以给master配置外挂的存储。
-    
-    #####################################################################
-    #
-    # docker storage.  This allocates a cinder volume and attaches it
-    # to the minion.
-    #
     
     docker_volume:                        //创建存储
       type: OS::Cinder::Volume
