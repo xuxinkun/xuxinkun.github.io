@@ -86,3 +86,6 @@ python可以使用remote interprtor进行开发。在settings->project->project 
 
 直接run目前没看到什么问题，但是多worker的程序使用debug时，不能正常工作。
 
+# IDEA主题下载
+
+IDEA的editor样式有很多样式，可以在[这里](http://color-themes.com/?view=index)进行下载。然后再File->Import Settings加载就可以了。
