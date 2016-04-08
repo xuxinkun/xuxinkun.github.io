@@ -138,7 +138,7 @@ error函数可以自定义某个error code的返回内容。可以使用abort函
     
     {"info": "Your request is not httpresponse."}
     
- # 完整样例
+# 完整样例
  
     import sys
     from bottle import abort, run, route , request, HTTPResponse, error
