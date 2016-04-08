@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "用Bottle开发web程序"
-subtitle:   "Develop web with bottle"
+title:      "用Bottle开发web程序(一)"
+subtitle:   "Develop web with bottle，Part One"
 date:       2016-04-06 8:00:00
 author:     "XuXinkun"
 header-img: "img/post-bg-dev-with-bottle.jpg"
