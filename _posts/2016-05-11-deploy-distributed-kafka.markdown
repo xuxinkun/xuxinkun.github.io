@@ -51,8 +51,9 @@ tar xzvf confluent-2.0.1-2.11.7.tar.gz
 ## 准备
 
 ### 声明变量
+
 ```sh
-## node1
+## node1上
 export role_num=1
 ## node2上
 export role_num=2
@@ -94,6 +95,22 @@ use mytest;
 CREATE TABLE accounts(id INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL, name VARCHAR(255));
 INSERT INTO accounts(name) VALUES('alice');
 INSERT INTO accounts(name) VALUES('bob');
+```
+
+产生模拟数据
+
+```sql
+create procedure genUsers()
+begin
+  declare i int default 0;
+  while i < 40 do
+  INSERT INTO accounts(name) VALUES ('num0'),('num1'),('num2'),('num3'),('num4'),('num5'),('num6'),('num7'),('num8'),('num9'),('num10'),('num11'),('num12'), ('num13'),('num14'),('num15'),('num16'),('num17'),('num18'),('num19'),('num20'),('num21'),('num22'),('num23'),('num24'), ('num25'),('num26'),('num27'),('num28'),('num29'),('num30'),('num31'),('num32'),('num33'),('num34'),('num35'),('num36'), ('num37'),('num38'),('num39'),('num40'),('num41'),('num42'),('num43'),('num44'),('num45'),('num46'),('num47'),('num48'), ('num49'),('num50'),('num51'),('num52'),('num53'),('num54'),('num55'),('num56'),('num57'),('num58'),('num59'),('num60'), ('num61'),('num62'),('num63'),('num64'),('num65'),('num66'),('num67'),('num68'),('num69'),('num70'),('num71'),('num72'), ('num73'),('num74'),('num75'),('num76'),('num77'),('num78'),('num79'),('num80'),('num81'),('num82'),('num83'),('num84'), ('num85'),('num86'),('num87'),('num88'),('num89'),('num90'),('num91'),('num92'),('num93'),('num94'),('num95'),('num96'), ('num97'),('num98'),('num99');
+  set i = i + 1;
+  end while;
+end
+
+call genUsers();
+select count(*) from accounts;
 ```
 
 ## zookeeper

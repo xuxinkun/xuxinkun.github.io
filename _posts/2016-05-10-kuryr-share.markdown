@@ -113,7 +113,7 @@ The [remote plugin](https://github.com/docker/libnetwork/blob/master/docs/remote
 
 | ip         | role                   |
 | ---------- | ---------------------- |
-| 10.8.65.79 | controller+network nod |
+| 10.8.65.79 | controller+network node|
 | 10.8.65.80 | network node           |
 | 10.8.65.81 | network node           |
 
