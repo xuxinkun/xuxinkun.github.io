@@ -139,7 +139,7 @@ lokkit -p 9092:tcp
 只在node1上执行
 
 ```sh
-./bin/schema-registry-start ./etc/schema-registry/schema-registry.properties
+./bin/schema-registry-start ./etc/schema-registry/schema-registry.properties &
 lokkit -p 8081:tcp
 ```
 
@@ -178,6 +178,12 @@ curl -X GET -H "Content-Type: application/json" http://localhost:8083/connectors
 
 ```sh
 ./bin/kafka-avro-console-consumer --new-consumer --bootstrap-server localhost:9092 --topic test-mysql-jdbc-accounts --from-beginning
+
+bin/kafka-console-consumer --zookeeper node1:2181 --topic connect-configs --from-beginning
+bin/kafka-console-consumer --zookeeper node1:2181 --topic connect-offsets --from-beginning
+
+
+bin/kafka-topics --zookeeper node1:2181 --describe --topic test-mysql-jdbc-accounts
 ```
 
 ## 删除connector

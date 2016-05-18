@@ -142,7 +142,7 @@ The [remote plugin](https://github.com/docker/libnetwork/blob/master/docs/remote
 ------------------------------
 
     10.8.65.80:
-    docker network create --driver=kuryr --ipam-driver=kuryr --subnet 10.0.0.0/16 --gateway 10.0.0.1 --ip-range 10.0.0.0/24 -o neutron.net.uuid=8c31997a-97f4-4283-9872-5e00250a014d kuryr
+    docker network create --driver=kuryr --ipam-driver=kuryr --subnet 10.0.0.0/16 --gateway 10.0.0.1 --ip-range 10.0.0.0/24 -o neutron.net.uuid=a11ce6f4-59aa-4868-8a6e-d86ad06b34b2 kuryr
     docker run -it -d --net kuryr --privileged=true  index.alauda.cn/xuxinkun/net_test
     
     10.8.65.81:
