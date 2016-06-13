@@ -7,7 +7,7 @@ author:     "XuXinkun"
 header-img: "img/post-bg-deploy-kafka.jpg"
 tags:
     - docker
-    - kafa
+    - kafka
 ---
 
 # Requirements
