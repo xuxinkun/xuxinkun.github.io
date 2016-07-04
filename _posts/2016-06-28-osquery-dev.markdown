@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "osquery Table源码分析"
+title:      "Facebook开源的基于SQL的操作系统检测和监控框架:osquery Table源码分析"
 subtitle:   "Analysis of Osquery Table "
 date:       2016-06-27 8:00:00
 author:     "XuXinkun"

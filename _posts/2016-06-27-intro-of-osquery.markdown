@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "基于SQL的操作系统检测和监控框架:osquery"
+title:      "Facebook开源的基于SQL的操作系统检测和监控框架:osquery"
 subtitle:   "An introduction of osquery"
 date:       2016-06-27 8:00:00
 author:     "XuXinkun"
