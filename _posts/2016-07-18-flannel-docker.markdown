@@ -22,13 +22,15 @@ tags:
 
 根据kubernetes的模型，即为每个pod提供一个ip。flannel的模型正好与之契合。因此flannel是最简单易用的kubernetes集群网络方案。
 
-# flannel与docker的集合
+# flannel与docker的结合
 
 flannel的工作原理这里不重复赘述。网上有很多资料。本文主要讲一下flannel是怎么与docker结合起来的。
 
 ## flannel服务启动
 
-flannel服务需要先于docker启动。flannel服务启动时主要做了以下几步的工作：
+flannel服务需要先于docker启动。flannel服务启动时主要做了以
+
+下几步的工作：
 
 - 从etcd中获取network的配置信息
 - 划分subnet，并在etcd中进行注册
