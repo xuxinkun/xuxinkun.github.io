@@ -24,21 +24,21 @@ kube-proxy的作用主要是负责service的实现，具体来说，就是实现
 比如我们使用这样的一个manifest来创建service
 
 ```
-	apiVersion: v1
-	kind: Service
-    metadata:
-      labels:
-        name: mysql
-        role: service
-      name: mysql-service
-    spec:
-      ports:
-        - port: 3306
-          targetPort: 3306
-	      nodePort: 30964
-	  type: NodePort
-	  selector:
-	    mysql-service: "true"
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: mysql
+    role: service
+  name: mysql-service
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 30964
+  type: NodePort
+  selector:
+    mysql-service: "true"
 ```
 
 他的含义是在node上暴露出30964端口。当访问node上的30964端口时，其请求会转发到service对应的cluster IP的3306端口，并进一步转发到pod的3306端口。
@@ -54,27 +54,27 @@ userspace是在用户空间，通过kuber-proxy实现LB的代理服务。这个�
 这里具体举个例子，以ssh-service1为例，kube为其分配了一个clusterIP。分配clusterIP的作用还是如上文所说，是方便pod到service的数据访问。
 
 ```
-	[minion@te-yuab6awchg-0-z5nlezoa435h-kube-master-udhqnaxpu5op ~]$ kubectl get service
-	NAME             LABELS                                    SELECTOR              IP(S)            PORT(S)
-	kubernetes       component=apiserver,provider=kubernetes   <none>                10.254.0.1       443/TCP
-	ssh-service1     name=ssh,role=service                     ssh-service=true      10.254.132.107   2222/TCP
+[minion@te-yuab6awchg-0-z5nlezoa435h-kube-master-udhqnaxpu5op ~]$ kubectl get service
+NAME             LABELS                                    SELECTOR              IP(S)            PORT(S)
+kubernetes       component=apiserver,provider=kubernetes   <none>                10.254.0.1       443/TCP
+ssh-service1     name=ssh,role=service                     ssh-service=true      10.254.132.107   2222/TCP
 ```
 
 使用describe可以查看到详细信息。可以看到暴露出来的NodePort端口30239。
 
 ```
-	[minion@te-yuab6awchg-0-z5nlezoa435h-kube-master-udhqnaxpu5op ~]$ kubectl describe service ssh-service1 
-	Name:			ssh-service1
-	Namespace:		default
-	Labels:			name=ssh,role=service
-	Selector:		ssh-service=true
-	Type:			LoadBalancer
-	IP:			10.254.132.107
-	Port:			<unnamed>	2222/TCP
-	NodePort:		<unnamed>	30239/TCP
-	Endpoints:		<none>
-	Session Affinity:	None
-	No events.
+[minion@te-yuab6awchg-0-z5nlezoa435h-kube-master-udhqnaxpu5op ~]$ kubectl describe service ssh-service1 
+Name:			ssh-service1
+Namespace:		default
+Labels:			name=ssh,role=service
+Selector:		ssh-service=true
+Type:			LoadBalancer
+IP:			10.254.132.107
+Port:			<unnamed>	2222/TCP
+NodePort:		<unnamed>	30239/TCP
+Endpoints:		<none>
+Session Affinity:	None
+No events.
 ```
 
 nodePort的工作原理与clusterIP大致相同，是发送到node上指定端口的数据，通过iptables重定向到kube-proxy对应的端口上。然后由kube-proxy进一步把数据发送到其中的一个pod上。
@@ -82,12 +82,12 @@ nodePort的工作原理与clusterIP大致相同，是发送到node上指定端�
 > 该node的ip为10.0.0.5
 
 ```
-	[minion@te-yuab6awchg-0-z5nlezoa435h-kube-master-udhqnaxpu5op ~]$ sudo iptables -S -t nat
-	...
-	-A KUBE-NODEPORT-CONTAINER -p tcp -m comment --comment "default/ssh-service1:" -m tcp --dport 30239 -j REDIRECT --to-ports 36463
-	-A KUBE-NODEPORT-HOST -p tcp -m comment --comment "default/ssh-service1:" -m tcp --dport 30239 -j DNAT --to-destination 10.0.0.5:36463
-	-A KUBE-PORTALS-CONTAINER -d 10.254.132.107/32 -p tcp -m comment --comment "default/ssh-service1:" -m tcp --dport 2222 -j REDIRECT --to-ports 36463
-	-A KUBE-PORTALS-HOST -d 10.254.132.107/32 -p tcp -m comment --comment "default/ssh-service1:" -m tcp --dport 2222 -j DNAT --to-destination 10.0.0.5:36463
+[minion@te-yuab6awchg-0-z5nlezoa435h-kube-master-udhqnaxpu5op ~]$ sudo iptables -S -t nat
+...
+-A KUBE-NODEPORT-CONTAINER -p tcp -m comment --comment "default/ssh-service1:" -m tcp --dport 30239 -j REDIRECT --to-ports 36463
+-A KUBE-NODEPORT-HOST -p tcp -m comment --comment "default/ssh-service1:" -m tcp --dport 30239 -j DNAT --to-destination 10.0.0.5:36463
+-A KUBE-PORTALS-CONTAINER -d 10.254.132.107/32 -p tcp -m comment --comment "default/ssh-service1:" -m tcp --dport 2222 -j REDIRECT --to-ports 36463
+-A KUBE-PORTALS-HOST -d 10.254.132.107/32 -p tcp -m comment --comment "default/ssh-service1:" -m tcp --dport 2222 -j DNAT --to-destination 10.0.0.5:36463
 ```
 
 可以看到访问node时候的30239端口会被转发到node上的36463端口。而且在访问clusterIP 10.254.132.107的2222端口时，也会把请求转发到本地的36463端口。
@@ -98,21 +98,21 @@ nodePort的工作原理与clusterIP大致相同，是发送到node上指定端�
 iptables的方式则是利用了linux的iptables的nat转发进行实现。在本例中，创建了名为mysql-service的service。
 
 ```
-	apiVersion: v1
-	kind: Service
-    metadata:
-      labels:
-        name: mysql
-        role: service
-      name: mysql-service
-    spec:
-      ports:
-        - port: 3306
-          targetPort: 3306
-	      nodePort: 30964
-	  type: NodePort
-	  selector:
-	    mysql-service: "true"
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: mysql
+    role: service
+  name: mysql-service
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+      nodePort: 30964
+  type: NodePort
+  selector:
+    mysql-service: "true"
 ```
 
 mysql-service对应的nodePort暴露出来的端口为30964，对应的cluster IP(10.254.162.44)的端口为3306，进一步对应于后端的pod的端口为3306。
