@@ -23,7 +23,7 @@ kube-proxy的作用主要是负责service的实现，具体来说，就是实现
 
 比如我们使用这样的一个manifest来创建service
 
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -53,7 +53,7 @@ userspace是在用户空间，通过kuber-proxy实现LB的代理服务。这个�
 
 这里具体举个例子，以ssh-service1为例，kube为其分配了一个clusterIP。分配clusterIP的作用还是如上文所说，是方便pod到service的数据访问。
 
-```
+```sh
 [minion@te-yuab6awchg-0-z5nlezoa435h-kube-master-udhqnaxpu5op ~]$ kubectl get service
 NAME             LABELS                                    SELECTOR              IP(S)            PORT(S)
 kubernetes       component=apiserver,provider=kubernetes   <none>                10.254.0.1       443/TCP
@@ -62,7 +62,7 @@ ssh-service1     name=ssh,role=service                     ssh-service=true     
 
 使用describe可以查看到详细信息。可以看到暴露出来的NodePort端口30239。
 
-```
+```sh
 [minion@te-yuab6awchg-0-z5nlezoa435h-kube-master-udhqnaxpu5op ~]$ kubectl describe service ssh-service1 
 Name:			ssh-service1
 Namespace:		default
@@ -81,7 +81,7 @@ nodePort的工作原理与clusterIP大致相同，是发送到node上指定端�
 
 > 该node的ip为10.0.0.5
 
-```
+```sh
 [minion@te-yuab6awchg-0-z5nlezoa435h-kube-master-udhqnaxpu5op ~]$ sudo iptables -S -t nat
 ...
 -A KUBE-NODEPORT-CONTAINER -p tcp -m comment --comment "default/ssh-service1:" -m tcp --dport 30239 -j REDIRECT --to-ports 36463
@@ -97,7 +97,7 @@ nodePort的工作原理与clusterIP大致相同，是发送到node上指定端�
 
 iptables的方式则是利用了linux的iptables的nat转发进行实现。在本例中，创建了名为mysql-service的service。
 
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -142,14 +142,14 @@ mysql-service后端代理了两个pod，ip分别是192.168.125.129和192.168.125
 
 首先如果是通过node的30964端口访问，则会进入到以下链
 
-```
+```sh
 -A KUBE-NODEPORTS -p tcp -m comment --comment "default/mysql-service:" -m tcp --dport 30964 -j KUBE-MARK-MASQ
 -A KUBE-NODEPORTS -p tcp -m comment --comment "default/mysql-service:" -m tcp --dport 30964 -j KUBE-SVC-67RL4FN6JRUPOJYM
 ```
 
 然后进一步跳转到KUBE-SVC-67RL4FN6JRUPOJYM的链
 
-```
+```sh
 -A KUBE-SVC-67RL4FN6JRUPOJYM -m comment --comment "default/mysql-service:" -m statistic --mode random --probability 0.50000000000 -j KUBE-SEP-ID6YWIT3F6WNZ47P
 -A KUBE-SVC-67RL4FN6JRUPOJYM -m comment --comment "default/mysql-service:" -j KUBE-SEP-IN2YML2VIFH5RO2T
 ```
@@ -158,14 +158,14 @@ mysql-service后端代理了两个pod，ip分别是192.168.125.129和192.168.125
 
 KUBE-SEP-ID6YWIT3F6WNZ47P的链的具体作用就是将请求通过DNAT发送到192.168.125.129的3306端口。
 
-```
+```sh
 -A KUBE-SEP-ID6YWIT3F6WNZ47P -s 192.168.125.129/32 -m comment --comment "default/mysql-service:" -j KUBE-MARK-MASQ
 -A KUBE-SEP-ID6YWIT3F6WNZ47P -p tcp -m comment --comment "default/mysql-service:" -m tcp -j DNAT --to-destination 192.168.125.129:3306
 ```
 
 同理KUBE-SEP-IN2YML2VIFH5RO2T的作用是通过DNAT发送到192.168.125.131的3306端口。
 
-```
+```sh
 -A KUBE-SEP-IN2YML2VIFH5RO2T -s 192.168.125.131/32 -m comment --comment "default/mysql-service:" -j KUBE-MARK-MASQ
 -A KUBE-SEP-IN2YML2VIFH5RO2T -p tcp -m comment --comment "default/mysql-service:" -m tcp -j DNAT --to-destination 192.168.125.131:3306
 ```
@@ -173,7 +173,7 @@ KUBE-SEP-ID6YWIT3F6WNZ47P的链的具体作用就是将请求通过DNAT发送到
 分析完nodePort的工作方式，接下里说一下clusterIP的访问方式。
 对于直接访问cluster IP(10.254.162.44)的3306端口会直接跳转到KUBE-SVC-67RL4FN6JRUPOJYM。
 
-```
+```sh
 -A KUBE-SERVICES -d 10.254.162.44/32 -p tcp -m comment --comment "default/mysql-service: cluster IP" -m tcp --dport 3306 -j KUBE-SVC-67RL4FN6JRUPOJYM
 ```
 
