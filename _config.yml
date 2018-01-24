@@ -4,8 +4,8 @@ SEOTitle: 徐新坤的博客 | XuXinkun Blog
 header-img: img/home-bg-o.jpg
 email: xuxinkun@gmail.com
 description: "XuXinkun Blog. 记录, 学习, 成长。"
-keyword: "徐新坤的博客, XuXinkun Blog, 博客, 个人网站, 云计算, docker, openstack"
-url: "http://xuxinkun.github.io"              # your host, for absolute URL
+keyword: "徐新坤的博客, XuXinkun Blog, 博客, 个人网站, 云计算, docker, openstack, kubernetes"
+url: "https://xuxinkun.github.io"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 
@@ -50,9 +50,9 @@ kramdown:
 #disqus_username: _your_disqus_short_name_
 
 # Duoshuo settings
-duoshuo_username: xuxinkungithub
+#duoshuo_username: xuxinkungithub
 # Share component is depend on Comment so we can NOT use share only.
-duoshuo_share: true                     # set to false if you want to use Comment without Sharing
+#duoshuo_share: true                     # set to false if you want to use Comment without Sharing
 
 
 
@@ -82,11 +82,16 @@ catalog: true
 # Friends
 friends: [
     {
-        title: "黄玄的博客 | Hux Blog",
-        href: "http://huangxuan.me/"
+        title: "我的Dockone主页 | Dockone Page",
+        href: "http://dockone.io/people/xuxinkun"
+    },
+    {
+        title: "我的博客园 | cnBlogs",
+        href: "http://www.cnblogs.com/xuxinkun/"
     },
     {
         title: "王亚普的博客 | WangYapu Blog",
         href: "http://wangyapu0714.github.io/"
     }
+
 ]
