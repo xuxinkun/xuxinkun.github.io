@@ -82,11 +82,11 @@ catalog: true
 # Friends
 friends: [
     {
-        title: "我的Dockone主页 | Dockone Page",
+        title: "我的Dockone主页",
         href: "http://dockone.io/people/xuxinkun"
     },
     {
-        title: "我的博客园 | cnBlogs",
+        title: "我的博客园",
         href: "http://www.cnblogs.com/xuxinkun/"
     },
     {
