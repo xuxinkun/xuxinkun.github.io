@@ -23,7 +23,7 @@ k8s的资源可以分为两类，一类是核心资源，如pod/svc/node/ep/rc�
 echo "[kubeflow]- crd ->[k8s 1.10 api]->[etcd] [kubelet],[kube-controller],[kube-scheduler]->[k8s 1.6 api]->[etcd]" | graph-easy
 ```
 
-```sh
+```Shell
                         +----------------+
                         | kube-scheduler |
                         +----------------+
@@ -77,11 +77,12 @@ echo "[kubeflow]- crd ->[k8s 1.10 api]->[etcd] [kubelet],[kube-controller],[kube
 
 这里kubeflow具有一定的特殊性，就是只用到了crd和pod等基础资源。假定某个新的服务service不仅用到了这些，还用到了1.10版本的rs、deployment、crontab等高级资源。则上述方案就不能使用了。但是依然应该有办法可以解决。
 
+
 ```
 echo "[service]->[k8s 1.10 api]- rs/deployment ->[etcd 1.10] [k8s 1.10 api]- pod/svc/node ->[etcd 1.6]  [kube-controller 1.10]->[k8s 1.10 api] [kubelet],[kube-controller 1.6],[kube-scheduler]->[k8s 1.6 api]->[etcd 1.6]" | graph-easy
 ```
 
-```sh
+```Shell
                                                       +----------------------------------------------+
                                                       |                                              |
                        +----------------------+     +--------------+  rs/deployment   +-----------+  |
