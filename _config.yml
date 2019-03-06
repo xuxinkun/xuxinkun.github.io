@@ -1,10 +1,10 @@
 # Site settings
-title: XuXinkun Blog
-SEOTitle: 徐新坤的博客 | XuXinkun Blog
+title: Xinkun Blog
+SEOTitle: xinkun的博客 | Xinkun Blog
 header-img: img/home-bg-o.jpg
 email: xuxinkun@gmail.com
 description: "XuXinkun Blog. 记录, 学习, 成长。"
-keyword: "徐新坤的博客, XuXinkun Blog, 博客, 个人网站, 云计算, docker, openstack, kubernetes"
+keyword: "xinkun的博客, Xinkun Blog, 博客, 个人网站, 云计算, docker, openstack, kubernetes"
 url: "https://xuxinkun.github.io"              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
