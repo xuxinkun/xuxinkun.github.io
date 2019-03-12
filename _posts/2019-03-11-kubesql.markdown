@@ -1,0 +1,222 @@
+---
+layout:     post
+title:      "使用kubesql进行kubernetes资源查询"
+subtitle:   "Use kubesql to query the resources of kubernetes."
+date:       2019-03-11 8:00:00
+author:     "XuXinkun"
+header-img: "img/post-bg-kube-ep-disappear.jpg"
+tags:
+    kubernetes
+---
+
+# kubesql
+
+kubesql([https://github.com/xuxinkun/kubesql](https://github.com/xuxinkun/kubesql))是我最近开发的一个使用sql查询kubernetes资源的工具。诸如node，pod等kubernetes的资源被处理为table。而后可以使用sql语句对其进行查询。
+
+例如，所有pod都很容易从apiserver中获取。但是想要计算每个节点上的pod数量并不容易。但是使用了kubesql，只用一条sql语句可以实现它。
+
+```
+[root@localhost kubesql]# kubesql "select hostIp, count(*) from pods group by hostIp"
++----------+----------------+
+| count(*) | hostIP         |
++----------+----------------+
+| 9        | None           |
+| 4        | 22.2.22.222    |
+| 14       | 11.1.111.11    |
++----------+----------------+
+```
+
+类似的，如果我要查询有多少处于Pending状态的容器，也可以使用这样的语句。
+
+```
+[root@localhost kubesql]# kubesql "select count(*) from pods where phase = 'Pending'"
++----------+
+| count(*) |
++----------+
+| 29       |
++----------+
+```
+
+kubesql的思路其实就是将一个pod内描述的各个属性转化为数据库中的一行数据。
+
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: 2018-09-28T07:42:35Z
+  name: watchtest
+  namespace: wangsiwu
+  uid: 10b60b8e-c2f2-11e8-8cfe-e0db55138e34
+spec:
+  nodeName: 10.8.64.179
+  schedulerName: default-scheduler
+status:
+  phase: Pending
+```
+
+```
+[root@f34cee76e36a kubesql]# kubesql "select * from pods where name='watchtest'"
++-------------+-------------------+-------------------+-----------+-----------+--------+-------+-----------+--------+---------+---------------------------+--------------------------------------+
+| nodeName    | schedulerName     | deletionTimestamp | namespace | name      | reason | podIP | startTime | hostIP | phase   | creationTimestamp         | uid                                  |
++-------------+-------------------+-------------------+-----------+-----------+--------+-------+-----------+--------+---------+---------------------------+--------------------------------------+
+| 10.8.64.179 | default-scheduler | None              | wangsiwu  | watchtest | None   | None  | None      | None   | Pending | 2018-09-28 07:42:35+00:00 | 10b60b8e-c2f2-11e8-8cfe-e0db55138e34 |
++-------------+-------------------+-------------------+-----------+-----------+--------+-------+-----------+--------+---------+---------------------------+--------------------------------------+
+```
+
+
+
+# 工作原理
+
+kubesql主要由三个组件组成。
+
+- kubesql-watch：始终watch来自kube-apiserver的事件，并将其进行整理为table，然后写入sqlite3。
+- kubesql-server：提供http api进行查询。接受sql查询，在sqlite3中执行查询并返回查询结果。
+- kubesql-client：将查询sql发送到kubesql-server并获取结果，然后以表格格式打印结果。
+
+> 为了增加sqlite3的吞吐量，db文件放在共享内存中，例如放在/dev/shm文件夹。请确保shm超过64MB（如果集群非常大，这里应该对应设置的较大）。
+
+```
++----------------+  watch   +---------------+     +---------+
+| kube-apiserver | -------> | kubesql-watch | --> | sqlite3 |
++----------------+          +---------------+     +---------+
+                                                    ^
+                                                    |
+                                                    |
++----------------+  http    +---------------+       |
+| kubesql-client | -------> | kubsql-server | ------+
++----------------+          +---------------+
+```
+
+
+# 部署方式
+
+使用docker可以进行方便的部署（我正在编写使用kubernetes进行部署，很快会更新上去）。
+
+这里假定将kubeconfig放置在物理机的/etc/kubernetes/kubeconfig位置上。
+
+首先部署kubesql-watch和kubesql-server。
+
+```
+docker pull xuxinkun/kubesql
+docker run -it -d --name kubesql-watch -v /dev/shm:/dev/shm -v /etc/kubernetes/kubeconfig:/etc/kubeconfig xuxinkun/kubesql kubesql-watch
+docker run -it -d --name kubesql-server -v /dev/shm:/dev/shm -v /etc/kubernetes/kubeconfig:/etc/kubeconfig xuxinkun/kubesql kubesql-server
+```
+
+# 使用方式
+
+执行kubesql命令，使用sql进行相关的查询。创建一个kubesql的容器用以执行命令。
+
+> 这里特别注意，如果不修改配置，就要使用`--net=container:kubesql-server`将kubesql的容器和kubesql-server的容器网络在一起，这样可以通过`127.0.0.1`地址进行访问。这个地址可以在`/etc/kubesql/config`中进行配置。如果配置了这个地址，就不必使用这个`--net`的参数了。
+
+```
+[root@localhost kubesql]# docker run -it --rm --name kubesql --net=container:kubesql-server xuxinkun/kubesql bash
+[root@d58bbb8c7aa8 kubesql]# kubesql -h
+usage: kubesql [-h] [-t TABLE] [-a] [sql]
+
+positional arguments:
+  sql                   execte the sql.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -t TABLE, --table TABLE
+                        increase output verbosity
+  -a, --all             show all tables
+```
+
+
+`kubesql -a` 命令可以查看当前支持的表格。
+
+```
+[root@localhost kubesql]# kubesql -a
++------------+
+| table_name |
++------------+
+| pods       |
+| nodes      |
++------------+
+```
+
+`kubesql -t {table_name}` 可以查询 `table_name` 表格支持的字段。每个字段对应的是api中的哪个字段，可以在`/etc/kubesql/params`中查看。
+
+```
+[root@localhost kubesql]# kubesql -t nodes
++-------------------------+-----+------------+---------+----+-----------+
+| name                    | cid | dflt_value | notnull | pk | type      |
++-------------------------+-----+------------+---------+----+-----------+
+| name                    | 0   | None       | 0       | 0  | char(200) |
+| uid                     | 1   | None       | 0       | 0  | char(200) |
+| creationTimestamp       | 2   | None       | 0       | 0  | datetime  |
+| deletionTimestamp       | 3   | None       | 0       | 0  | datetime  |
+| allocatable_cpu         | 5   | None       | 0       | 0  | char(200) |
+| allocatable_memory      | 6   | None       | 0       | 0  | char(200) |
+| allocatable_pods        | 7   | None       | 0       | 0  | char(200) |
+| capacity_cpu            | 8   | None       | 0       | 0  | char(200) |
+| capacity_memory         | 9   | None       | 0       | 0  | char(200) |
+| capacity_pods           | 10  | None       | 0       | 0  | char(200) |
+| architecture            | 11  | None       | 0       | 0  | char(200) |
+| containerRuntimeVersion | 12  | None       | 0       | 0  | char(200) |
+| kubeProxyVersion        | 13  | None       | 0       | 0  | char(200) |
+| kubeletVersion          | 14  | None       | 0       | 0  | char(200) |
+| operatingSystem         | 15  | None       | 0       | 0  | char(200) |
+| osImage                 | 16  | None       | 0       | 0  | char(200) |
++-------------------------+-----+------------+---------+----+-----------+
+```
+
+# 一些样例
+
+查询某个节点的pod的名称和ns。
+
+```
+[root@localhost kubesql]# kubesql "select name, namespace from pods where hostIp = '172.22.160.107'"
++-----------+-----------------------------------------------------------+
+| namespace | name                                                      |
++-----------+-----------------------------------------------------------+
+| default   | imagetest1                                                |
+| xutest    | dftest-b16f1ac7-0b56c2b9-v2bw2                            |
+| default   | imagetest                                                 |
+| xutest    | dftest-9da529db                                           |
++-----------+-----------------------------------------------------------+
+```
+
+查询2019-03-12之后创建的容器名称和创建时间。
+
+```
+[root@localhost kubesql]# kubesql "select name, namespace,creationTimestamp from pods where creationTimestamp > datetime('2019-03-12') order by creationTimestamp desc"
++-----------+---------------------------+------------------+
+| namespace | creationTimestamp         | name             |
++-----------+---------------------------+------------------+
+| huck-test | 2019-03-12 07:59:36+00:00 | xxxxlog-v4-hvmsd |
+| xutt      | 2019-03-12 02:45:40+00:00 | soxcs-a03b8302   |
++-----------+---------------------------+------------------+
+```
+
+查询docker版本是1.10.3的节点。
+
+```
+[root@localhost kubesql]# kubesql "select name,containerRuntimeVersion from nodes where containerRuntimeVersion = 'docker://1.10.3'"
++----------------+-------------------------+
+| name           | containerRuntimeVersion |
++----------------+-------------------------+
+| 111.22.111.31  | docker://1.10.3         |
+| 11.3.22.201    | docker://1.10.3         |
++----------------+-------------------------+
+```
+
+# 开发的思路历程
+
+多年前，接触了facebook开源的项目osquery。关于该项目可以参见我以前的博客资料[https://xuxinkun.github.io/tags/#osquery](https://xuxinkun.github.io/tags/#osquery)。
+
+osquery使用sql来管理系统信息，进行查询的思路给了我极深的印象。在我后来使用kubernetes时，我也经常会想，能不能用sql来查询kubernetes的资源。
+
+在这个思路的启发下，我做了第一版的kubesql，其主要是将kube-apiserver的数据写成文件，而后由spark进行读取，并执行查询。这个版本的kubesql有很大的一个问题，就是数据不能够动态更新。而且不太稳定，经常出现spark退出的问题。另外一个弊病是字段难于重命名，比如`metadata.name`字段就只能使用这个很长的名字，不方便使用。
+
+因此我在重新开发的时候，重新设计了实现方式和架构，更具有灵活性。而且支持字段重命名。当然，也有很多不完善的地方。还需要开发的。
+
+如果有兴趣的同学，也可以一起来参加开发。我的开发计划如下：
+
+- 增加list的支持，可以支持pod中container字段的支持
+- 完善出错处理
+- 提高watch性能，减少对sqlite3的压力
+- 增加自定义处理函数，这样可以将内存等值从字符串处理为数值
+- 增加更多的资源支持，如rs，configmap，deployment等
