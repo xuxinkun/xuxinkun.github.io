@@ -6,7 +6,7 @@ date:       2016-04-14 8:00:00
 author:     "XuXinkun"
 header-img: "img/post-bg-wonderful-article.jpg"
 tags:
-    - interesting
+
 ---
 
 # 写在前面

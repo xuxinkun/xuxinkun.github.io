@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "Magnum Kuernetes源码分析(一)"
-subtitle:   "Magnum Kuernetes Analysis, Part One"
+title:      "Magnum Kubernetes源码分析(一)"
+subtitle:   "Magnum Kubernetes Analysis, Part One"
 date:       2016-03-15 12:00:00
 author:     "XuXinkun"
 header-img: "img/post-bg-magnum-kubernetes.jpg"
