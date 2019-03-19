@@ -2,7 +2,7 @@
 layout:     post
 title:      "使用ansible kubectl插件连接kubernetes pod"
 subtitle:   "use ansible to connect to pods of kubernetes."
-date:       2018-9-25 8:00:00
+date:       2019-3-14 8:00:00
 author:     "XuXinkun"
 header-img: "img/post-bg-curl-ca.jpg"
 tags:
