@@ -46,7 +46,7 @@ kind: Pod
 metadata:
   creationTimestamp: 2018-09-28T07:42:35Z
   name: watchtest
-  namespace: wangsiwu
+  namespace: wanwwiwu
   uid: 10b60b8e-c2f2-11e8-8cfe-e0db55138e34
 spec:
   nodeName: 10.8.64.179
@@ -60,7 +60,7 @@ status:
 +-------------+-------------------+-------------------+-----------+-----------+--------+-------+-----------+--------+---------+---------------------------+--------------------------------------+
 | nodeName    | schedulerName     | deletionTimestamp | namespace | name      | reason | podIP | startTime | hostIP | phase   | creationTimestamp         | uid                                  |
 +-------------+-------------------+-------------------+-----------+-----------+--------+-------+-----------+--------+---------+---------------------------+--------------------------------------+
-| 10.8.64.179 | default-scheduler | None              | wangsiwu  | watchtest | None   | None  | None      | None   | Pending | 2018-09-28 07:42:35+00:00 | 10b60b8e-c2f2-11e8-8cfe-e0db55138e34 |
+| 10.8.64.179 | default-scheduler | None              | wanwwiwu  | watchtest | None   | None  | None      | None   | Pending | 2018-09-28 07:42:35+00:00 | 10b60b8e-c2f2-11e8-8cfe-e0db55138e34 |
 +-------------+-------------------+-------------------+-----------+-----------+--------+-------+-----------+--------+---------+---------------------------+--------------------------------------+
 ```
 
