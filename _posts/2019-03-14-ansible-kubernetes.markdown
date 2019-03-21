@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "使用ansible kubectl插件连接kubernetes pod"
-subtitle:   "use ansible to connect to pods of kubernetes."
+title:      "使用ansible kubectl插件连接kubernetes pod以及实现原理"
+subtitle:   "Use ansible to connect to pods of kubernetes."
 date:       2019-3-14 8:00:00
 author:     "XuXinkun"
 header-img: "img/post-bg-curl-ca.jpg"
@@ -93,7 +93,7 @@ kubectl connection plugin不仅支持命令的执行，其他如cp文件、fetch
 我个人的建议是可以用这个插件进行注入密钥、低频启停服务的运维操作。大批量的操作仍然最好使用ssh进行。
 
 
-# 设计思路与原理
+# 实现原理
 
 ## ansible connection plugin
 
@@ -107,7 +107,7 @@ ansible的connection plugin有很多，目前支持的有ssh、docker、kubectl�
 
 ## kubectl exec
 
-kubectl exec天然就是执行命令的。docker client 有cp的功能，但是kubectl并不具有。这里用了一个小的技巧，就是使用dd命令配合kubectl exec进行文件的传输和拉取。
+kubectl exec天然就是执行命令的。docker client 有cp的功能，但是kubectl并不具有(k8s 1.5版本后已支持了cp)。这里用了一个小的技巧，就是使用dd命令配合kubectl exec进行文件的传输和拉取。
 
 > 因此要求目标容器中也要有dd命令，否则该插件也无法工作。
 
