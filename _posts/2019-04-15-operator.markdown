@@ -32,7 +32,7 @@ operator跟docker是相似的，而其主要的交付对象从单个的应用实
 
 最早接触编排概念，是通过openstack的heat项目。openstack中从计算、存储到网络有很多的系统。而如果部署一个完整的应用虚拟机，需要多种资源的协同参与。heat项目就是为此目标而生。其通过模板和参数对多种资源进行编排，实现了对一个完整服务的创建、部署、修改、删除等生命周期管理。
 
-![Helm](https://xuxinkun.github.io/img/operator/operator_Helm.png)
+![Helm](https://xuxinkun.github.io/img/operator/operator_helm.png)
 
 在k8s中，也有许多编排项目，目前比较热门的是包管理工具Helm。如果说docker是奠定的单实例的标准化交付，那么Helm则是集群化多实例、多资源的标准化交付。
 
