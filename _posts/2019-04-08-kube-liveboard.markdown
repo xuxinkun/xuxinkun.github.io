@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "kube-liveboard: 使你的k8s集群可见"
+title:      "kube-liveboard: kubernetes集群可视化工具"
 subtitle:   "kube-liveboard: make your cluster visible."
 date:       2019-4-8 8:00:00
 author:     "XuXinkun"
@@ -50,3 +50,8 @@ apiserver的请求延时、请求速率、请求计数、容器状态等，这�
 下图是调度质量监控，主要展示了当前的调度分配率直方图和分位图。从中可以反应出调度是否均衡，以及整个集群的资源瓶颈等。
 
 ![scheduling-quality-2](https://xuxinkun.github.io/img/kube-liveboard/scheduling-quality-2.png)
+
+
+
+
+
