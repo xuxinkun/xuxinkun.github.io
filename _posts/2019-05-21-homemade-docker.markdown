@@ -58,7 +58,7 @@ type ProtoDriver interface {
 
 为了方便，我们举一个例子。假设某个镜像由两层组成，layer1(lower)和layer2(upper)。layer1中有一个文件A，layer2中有一个文件B。那么对单一的layer2来说，其实只有一个文件也就是B。但是通过联合文件系统将layer1和layer2联合起来时，得到layer1+2，将layer1+2挂载起来，那么获得的挂载点文件夹下应该包含了A和B两个文件(本文中将这种挂载点称为联合挂载点)。
 
-![graph](https://xuxinkung.github.io/img/vdisk/graph.png)
+![graph](https://xuxinkun.github.io/img/vdisk/graph.png)
 
 这里结合这个例子分别对这些中比较重要的方法进行一下介绍：
 
