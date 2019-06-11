@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "flannel vxlan工作基本原理及常见排障"
+title:      "flannel vxlan工作基本原理及常见排障思路"
 subtitle:   "Flannel vxlan troubleshooting process."
 date:       2019-6-5 8:00:00
 author:     "XuXinkun"
@@ -137,7 +137,7 @@ cni0		8000.3611ab932f6f	no		veth5a89e906
 
 同一台物理机上不同容器的ping只需要经过cni0的网桥就可以了。
 
-## 排障的主要方法
+## 排障的主要思路
 
 在梳理了数据包的正常流转过程后，就可以用tcpdump来进行问题的定位，进而排查出哪个环节出现了问题，进而查看问题产生的原因。
 
