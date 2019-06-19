@@ -1,0 +1,205 @@
+---
+layout:     post
+title:      "ingress在物理机上的nodePort和hostNetwork两种部署方式解析及比较"
+subtitle:   "deploy ingress to baremetal."
+date:       2019-6-11 8:00:00
+author:     "XuXinkun"
+header-img: "img/post-bg-build-k8s.jpg"
+tags:
+    - kubernetes
+---
+
+## ingress controller在物理机上的两种部署方式
+
+ingress controller(ingress-nginx)负责k8s中的7层负载均衡。其在物理机中有多种部署方式。本文中主要选择了nodePort和hostNetwork两种部署方式进行介绍。主要原因是这两种部署方式不需要借助于其他组件，直接使用的是k8s的基础组件和使用方式，较为容易理解和排障。
+
+> 注：本文中的kube-proxy使用的是iptables
+
+本文使用的ingress-nginx的commit版本是51ad0bc54b1475384b67bee9e8a8e41e26b18bc4。该版本的部署方式是在NGINX: 0.24.1版本后重构了deploy文件夹中的ingress-nginx的部署相关文件。采用了kustomize进行部署配置。因此推荐使用kubectl 1.14以上的版本。且特别注意，下面的命令都是使用了`kubectl apply -k`的方式运行，而不是`-f`参数。
+
+#### deploy各个文件夹走读
+
+ingress-nginx项目deploy文件夹下有多个文件夹，为不同的环境提供支持。这里我们主要介绍的是与在物理机部署相关的几个文件夹。
+
+###### cluster-wide
+
+```
+├── cluster-wide
+│   ├── cluster-role-binding.yaml
+│   ├── cluster-role.yaml
+│   └── kustomization.yaml
+```
+
+cluster-wide文件夹主要用于创建cluster-role和cluster-role-binding，为ingress-controller提供apiserver的cluster访问权限。这里cluster-role-binding.yaml要作一下修改，指定`namespace: ingress-nginx`。因为在后面创建的ServiceAccount等其他资源都是默认在该namespace下。
+
+```
+[root@local cluster-wide]# cat cluster-role-binding.yaml
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: nginx-ingress-clusterrole-nisa-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: nginx-ingress-clusterrole
+subjects:
+  - kind: ServiceAccount
+    name: nginx-ingress-serviceaccount
+    namespace: ingress-nginx
+```
+
+###### cloud-generic
+
+```
+├── cloud-generic
+│   ├── deployment.yaml
+│   ├── kustomization.yaml
+│   ├── role-binding.yaml
+│   ├── role.yaml
+│   ├── service-account.yaml
+│   └── service.yaml
+```
+
+cloud-generic文件夹提供了通用的一些部署文件。其中deployment.yaml是负责创建ingress-controller的deployment，默认副本数为1，可以进行调节。service.yaml是为ingress-controller创建的service。其他的主要是与账户相关的内容。
+
+###### baremetal
+
+```
+├── baremetal
+│   ├── kustomization.yaml
+│   └── service-nodeport.yaml
+```
+
+baremetal文件夹主要是创建了一个NodePort类型的svc，然后向ingress-controller的容器进行导流的。因为该部署方式需要依赖cloud-generic里的资源，因此在kustomization.yaml中描述了对cloud-generic的依赖。可以参看kustomization.yaml中的bases。
+
+```
+[root@local baremetal]# cat deploy/baremetal/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../cloud-generic
+patchesStrategicMerge:
+- service-nodeport.yaml
+```
+
+大致了解了相关部署文件的功能，那么结合具体的两种部署图(部署图来自官网)，来进行一下具体介绍。
+
+#### nodePort部署
+
+![nodePort](https://xuxinkun.github.io/img/ingress/nodeport.jpg)
+
+nodePort的部署思路就是通过在每个节点上开辟nodePort的端口，将流量引入进来，而后通过iptables首先转发到ingress-controller容器中(图中的nginx容器)，而后由nginx根据ingress的规则进行判断，将其转发到对应的应用web容器中。因此采用nodePort部署较为简单，直接使用以下命令即可。
+
+```
+kubectl apply -k deploy/baremetal/
+kubectl apply -k deploy/cluster-wide/
+```
+
+#### hostNetwork部署
+
+![hostNetwork](https://xuxinkun.github.io/img/ingress/hostnetwork.jpg)
+
+相比较起来，hostNetwork模式不再需要创建一个nodePort的svc，而是直接在每个节点都创建一个ingress-controller的容器，而且将该容器的网络模式设为hostNetwork。也就是说每个节点物理机的80和443端口将会被ingress-controller中的nginx容器占用。当流量通过80/443端口进入时，将直接进入到nginx中。而后nginx根据ingress规则再将流量转发到对应的web应用容器中。
+
+这里需要对cloud-generic/deployment.yaml进行一下改动，将其资源类型从deployment改为daemonset，并且在spec中添加`hostNetwork: true`，从而使其可以使用物理机网络。
+
+```
+[root@local deploy]# cat cloud-generic/deployment.yaml 
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: nginx-ingress-controller
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: "10254"
+        prometheus.io/scrape: "true"
+      labels:
+        nginx-ingress-controller: 0.24.1
+    spec:
+      serviceAccountName: nginx-ingress-serviceaccount
+      hostNetwork: true
+      ...
+```
+
+修改完成后，使用以下命令即可完成hostNetwork模式的部署。
+
+```
+kubectl apply -k deploy/cloud-generic/
+kubectl apply -k deploy/cluster-wide/
+```
+
+#### 两种部署方式的比较
+
+相比较起来，nodePort部署模式中需要部署的ingress-controller容器较少。一个集群可以部署几个就可以了。而hostNetwork模式需要在每个节点部署一个ingress-controller容器，因此总起来消耗资源较多。另外一个比较直观的区别，nodePort模式主要占用的是svc的nodePort端口。而hostNetwork则需要占用物理机的80和443端口。
+
+从网络流转来说，通过nodePort访问时，该node节点不一定部署了ingress-controller容器。因此还需要iptables将其转发到部署有ingress-controller的节点上去，多了一层流转。
+
+另外，通过nodePort访问时，nginx接收到的http请求中的source ip将会被转换为接受该请求的node节点的ip，而非真正的client端ip。
+
+而使用hostNetwork的方式，ingress-controller将会使用的是物理机的DNS域名解析(即物理机的/etc/resolv.conf)。而无法使用内部的比如coredns的域名解析。
+
+因此具体使用哪种部署方式，需要根据实际情况和需求进行选择。
+
+## ingress controller试用
+
+在部署好ingress controller后，可以通过一个样例进行测试使用。首选创建一个应用容器和以及一个对应的svc。
+
+```
+kubectl run web --image=gcr.azk8s.cn/google-samples/hello-app:1.0 --port=8080
+kubectl expose deployment web --target-port=8080
+```
+
+然后创建ingress，将通过hello-world.info域名访问ingress的请求转发到该容器中去。
+
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+ rules:
+ - host: hello-world.info
+   http:
+     paths:
+     - path: /*
+       backend:
+         serviceName: web
+         servicePort: 8080
+```
+
+这一切完成后，在/etc/hosts里绑定域名，`127.0.0.1 hello-world.info`。
+
+
+```
+sed -i '$a 127.0.0.1 hello-world.info' /etc/hosts
+```
+
+然后通过curl命令进行测试。
+
+```
+root@i-5i2mhmaus9v67pz19zmahp07u:~# curl 127.0.0.1
+<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx/1.15.10</center>
+</body>
+</html>
+
+root@i-5i2mhmaus9v67pz19zmahp07u:~# curl hello-world.info 
+Hello, world!
+Version: 1.0.0
+Hostname: web-77f97c6cc7-g7qft
+```
+
+这里可以看到，我们访问本地127.0.0.1的时候，会返回404错误。而访问绑定的域名，就可以正确导流了，返回正确结果。
+
+## 参考资料
+
+- [ingress-nginx https://github.com/kubernetes/ingress-nginx](https://github.com/kubernetes/ingress-nginx)
+- [Bare-metal considerations https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/baremetal.md](https://github.com/kubernetes/ingress-nginx/blob/master/docs/deploy/baremetal.md)
+- [https://github.com/kubernetes/ingress-nginx/blob/51ad0bc54b1475384b67bee9e8a8e41e26b18bc4/deploy](https://github.com/kubernetes/ingress-nginx/blob/51ad0bc54b1475384b67bee9e8a8e41e26b18bc4/deploy)

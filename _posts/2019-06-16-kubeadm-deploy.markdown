@@ -200,7 +200,7 @@ kubeadm join kubemaster.cluster.local:6443 --token pcumbv.qwa7uwzr7m7cijxy \
     --experimental-control-plane --certificate-key 33f387801d51c0a743353357b138cf4ad70fd3acaa7a6ccec9835627773f1cb7 --node-name $nodename
 ```
 
-当然，第二个同单master模式就相似了。
+当然，第二个是将节点以node身份加入集群，命令基本就跟单master模式就相似了。
 
 ```
 nodename=`ip -4 route get 8.8.8.8|head -n 1|awk -F ' ' '{print $NF}'`
