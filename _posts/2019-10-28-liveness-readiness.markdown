@@ -74,7 +74,7 @@ func DoHTTPProbe(url *url.URL, headers http.Header, client HTTPGetInterface) (pr
 ```
 
 http探测是通过kubelet请求容器的指定url，并根据response来进行判断。
-当返回的状态码在200到400(不含400)之间时，也就是状态码为2xx和3xx是，认为探测成功。否则认为失败。
+当返回的状态码在200到400(不含400)之间时，也就是状态码为2xx和3xx，认为探测成功。否则认为失败。
 
 
 #### tcp探测 
