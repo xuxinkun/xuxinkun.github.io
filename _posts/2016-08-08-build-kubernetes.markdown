@@ -13,7 +13,7 @@ tags:
 
 工欲善其事，必先利其器。在阅读kubernetes源码时，我也先后使用过多个IDE，最终还是停留在IDEA上。
 
-我惯用的是pycharm(IDEA的python IDE版本)，配上go的插件，把源码目录进行合理组织后，加入到go的lib，即可实现跳转。更多的方法可以参看[这里](http://xuxinkun.github.io/2016/03/21/idea-svn/)。
+我惯用的是pycharm(IDEA的python IDE版本)，配上go的插件，把源码目录进行合理组织后，加入到go的lib，即可实现跳转。更多的方法可以参看[这里](https://xuxinkun.github.io/2016/03/21/idea-svn/)。
 
 # kubernetes源码编译
 

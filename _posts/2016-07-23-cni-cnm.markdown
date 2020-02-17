@@ -85,7 +85,7 @@ EOF
 
 相较于CNI，CNM是docker公司力推的网络模型。其主要模型如下图：
 
-![docker network](http://xuxinkun.github.io/img/kuryr/docker_network.png)
+![docker network](https://xuxinkun.github.io/img/kuryr/docker_network.png)
 
 ### Sandbox
 

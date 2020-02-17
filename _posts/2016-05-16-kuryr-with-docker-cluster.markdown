@@ -32,7 +32,7 @@ docker本身有许多的数据需要，在先前的版本中，docker一般将�
 
 本实验目标是实现多个容器共享neutron的subnet。
 
-![docker neutron](http://xuxinkun.github.io/img/kuryr/docker_neutron.png)
+![docker neutron](https://xuxinkun.github.io/img/kuryr/docker_neutron.png)
 
 ## 创建网络
 

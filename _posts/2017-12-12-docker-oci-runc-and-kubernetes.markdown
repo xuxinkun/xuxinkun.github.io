@@ -31,7 +31,7 @@ tags:
 
 为了兼容oci标准，docker也做了架构调整。将容器运行时相关的程序从docker daemon剥离出来，形成了**containerd**。Containerd向docker提供运行容器的API，二者通过grpc进行交互。containerd最后会通过runc来实际运行容器。
 
-![containerd](http://xuxinkun.github.io/img/docker-oci-runc-k8s/containerd.png)
+![containerd](https://xuxinkun.github.io/img/docker-oci-runc-k8s/containerd.png)
 
 ## 容器引擎
 
@@ -50,11 +50,11 @@ kubernetes在初期版本里，就对多个容器引擎做了兼容，因此可�
 
 如上文所述，docker独立出来了containerd。kubernetes也顺应潮流，孵化了**cri-containerd**项目，用以将containerd接入到cri的标准中。
 
-![cri-containerd](http://xuxinkun.github.io/img/docker-oci-runc-k8s/cri-containerd.png)
+![cri-containerd](https://xuxinkun.github.io/img/docker-oci-runc-k8s/cri-containerd.png)
 
 为了进一步与oci进行兼容，kubernetes还孵化了**cri-o**，成为了架设在cri和oci之间的一座桥梁。通过这种方式，可以方便更多符合oci标准的容器运行时，接入kubernetes进行集成使用。可以预见到，通过cri-o，kubernetes在使用的兼容性和广泛性上将会得到进一步加强。
 
-![kubelet](http://xuxinkun.github.io/img/docker-oci-runc-k8s/kubelet.png)
+![kubelet](https://xuxinkun.github.io/img/docker-oci-runc-k8s/kubelet.png)
 
 
 

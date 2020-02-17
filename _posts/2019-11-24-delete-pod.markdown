@@ -113,7 +113,7 @@ func (kl *Kubelet) syncPod(o syncPodOptions) error {
 
 #### killPod
 
-killPod是停止pod的主体。在很多地方都会使用。这里主要介绍下起主要的工作流程。停止pod的过程主要发生在killPodWithSyncResult函数中。
+killPod是停止pod的主体。在很多地方都会使用。这里主要介绍下主要的工作流程。停止pod的过程主要发生在killPodWithSyncResult函数中。
 
 ```
 func (m *kubeGenericRuntimeManager) killPodWithSyncResult(pod *v1.Pod, runningPod kubecontainer.Pod, gracePeriodOverride *int64) (result kubecontainer.PodSyncResult) {

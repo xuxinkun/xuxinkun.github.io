@@ -46,7 +46,7 @@ IDEA的几个功能是我特别满意的:
 
 在IDEA的plugins中中首先安装Go插件。
 
-![Go-plugin](http://xuxinkun.github.io/img/idea/idea-golang-plugin.png)
+![Go-plugin](https://xuxinkun.github.io/img/idea/idea-golang-plugin.png)
 
 然后在设置中设置Go SDK。
 
@@ -62,7 +62,7 @@ IDEA的几个功能是我特别满意的:
 
 然后将idea目录添加至go libraries中。
 
-![Go-settings](http://xuxinkun.github.io/img/idea/idea-go-settings.png)
+![Go-settings](https://xuxinkun.github.io/img/idea/idea-go-settings.png)
 
 这样在阅读golang源码时，就可以直接跟踪函数了。
 
@@ -70,17 +70,17 @@ IDEA的几个功能是我特别满意的:
 
 在windows上使用svn，一般都是用的TortoiseSVN。在使用IDEA，配置svn的时候，需要配置svn的 `command line`，即svn.exe的位置。
 
-![svn-settings](http://xuxinkun.github.io/img/idea/idea-svn-settings.png)
+![svn-settings](https://xuxinkun.github.io/img/idea/idea-svn-settings.png)
 
 如果没有svn.exe，一般是在安装TortoiseSVN时没有安装。重新安装一下，勾选`command line client tools`即可。
 
-![TortoiseSVN](http://xuxinkun.github.io/img/idea/idea-svn.png)
+![TortoiseSVN](https://xuxinkun.github.io/img/idea/idea-svn.png)
 
 # python remote interprtor
 
 python可以使用remote interprtor进行开发。在settings->project->project interprtor中add remote。
 
-![python remote interprtor](http://xuxinkun.github.io/img/idea/idea-python.png)
+![python remote interprtor](https://xuxinkun.github.io/img/idea/idea-python.png)
 
 配置好ssh选项，IDEA将会自动将远程服务器中python的库同步到本机。在之后，设置RUN/DEBUG Configurations的，就可以设置使用远程的interprtor了。
 

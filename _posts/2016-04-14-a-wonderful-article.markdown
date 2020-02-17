@@ -333,21 +333,21 @@ By the way，我们最近正计划开源它，为中国开源社区做贡献，�
 
 ————
 
-![](http://xuxinkun.github.io/img/zhihu/7.png)
+![](https://xuxinkun.github.io/img/zhihu/7.png)
 
-[@bhuztez](//www.zhihu.com/people/dcddea61834f6b2dcb515f393fe29575) 满意吗
+@bhuztez 满意吗
 
 ## 知乎评论
 
 这篇文章真的是精彩。特别是一些句式，模仿长者的口气，简直惟妙惟肖。这样精彩而认真的文章，也就引来了相当多的共鸣。可以看到很多评论已经深深陷入了对回答的认同。
 
-![](http://xuxinkun.github.io/img/zhihu/1.png)
+![](https://xuxinkun.github.io/img/zhihu/1.png)
 
-![](http://xuxinkun.github.io/img/zhihu/2.png)
+![](https://xuxinkun.github.io/img/zhihu/2.png)
 
-![](http://xuxinkun.github.io/img/zhihu/3.png)
+![](https://xuxinkun.github.io/img/zhihu/3.png)
 
-![](http://xuxinkun.github.io/img/zhihu/4.png)
+![](https://xuxinkun.github.io/img/zhihu/4.png)
 
 看来这样的回答，还是有不少的共鸣的。至少我在第一遍读的时候，也有些认同。只是总感觉有些怪怪的。
 
@@ -355,11 +355,11 @@ By the way，我们最近正计划开源它，为中国开源社区做贡献，�
 
 对于评论中那些**深以为然**的同学们，我真的只能说一句，**还是太年轻(too young too simple)**。因为萧大撰写此文的原委在这里
 
-![](http://xuxinkun.github.io/img/zhihu/5.png)
+![](https://xuxinkun.github.io/img/zhihu/5.png)
 
 这是一篇真正的洗地文。黑的水平之高，已经很难让人分清这是黑还是洗地。正如评论中所说
 
-![](http://xuxinkun.github.io/img/zhihu/6.png)
+![](https://xuxinkun.github.io/img/zhihu/6.png)
 
 明白了事情的原委，你再去读这篇帖子。是不是会有不一样的感受呢？
 

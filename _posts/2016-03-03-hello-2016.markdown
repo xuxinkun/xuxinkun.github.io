@@ -30,7 +30,7 @@ XuXinkun 的 Blog 终于开通了。
 github pages是github提供出来的一种托管的页面。因此利用Github Pages来做博客是再合适不过了。更多的帮助可以看[这里](https://help.github.com/categories/github-pages-basics/)。
 
 这里主要介绍一下其中要注意的点。当你github的Repository name是username.github.io时，你的 **master** 分支才是用于生成Github Pages的。
-而其生成的页面会直接在根路径下，类似于这样 **http://xuxinkun.github.io/**。
+而其生成的页面会直接在根路径下，类似于这样 **https://xuxinkun.github.io/**。
 
 而如果Repository name不是username.github.io，比如[StrayBirds](https://github.com/minixalpha/StrayBirds)，则需要创建 **gh-pages**分支用于自动生成页面。相应的其生成的页面路径也会带有Repository name，类似于 **http://minixalpha.github.io/StrayBirds/** 这样
 

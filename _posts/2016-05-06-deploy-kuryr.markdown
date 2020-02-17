@@ -32,7 +32,7 @@ kuryr是docker和neutron结合的一个项目。docker自1.9之后，支持libne
 
 ## 安装
 
-使用RDO进行安装。由于只需要neutron和keystone服务，所以对answer-file进行调整。neutron的网络有vlan/vxlan/GRE三种。这里因为使用的是虚拟机，我采用了vxlan的方式进行配置。我的[answer-file样例](http://xuxinkun.github.io/file/answer-file)。
+使用RDO进行安装。由于只需要neutron和keystone服务，所以对answer-file进行调整。neutron的网络有vlan/vxlan/GRE三种。这里因为使用的是虚拟机，我采用了vxlan的方式进行配置。我的[answer-file样例](https://xuxinkun.github.io/file/answer-file)。
 
 在使用RDO之前，首先要关闭三个机器的selinux。并添加三个机器，可以无密钥登录。这里就不详细描述了。具体怎样做可以搜一下。
 
@@ -57,7 +57,7 @@ kuryr是docker和neutron结合的一个项目。docker自1.9之后，支持libne
 	pip install -r requirements.txt
 	python setup.py install
 
-kuryr的配置文件可以通过tox自动生成(需要提前`easy_install tox`来安装tox)。这里给一个范例[kuryr](http://xuxinkun.github.io/file/kuryr.conf)。
+kuryr的配置文件可以通过tox自动生成(需要提前`easy_install tox`来安装tox)。这里给一个范例[kuryr](https://xuxinkun.github.io/file/kuryr.conf)。
 
 # 运行kuryr
 
